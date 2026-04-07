@@ -1,66 +1,186 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Akawnt - Job Application & Admin Authentication System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based job application and admin authentication system for the Akawnt accounting firm.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### For Job Applicants
+- Submit applications via form on homepage with resume upload
+- Receive email notification upon acceptance/decline
+- Login to view application status after acceptance
+- View profile and application details on personal dashboard
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### For Administrators
+- Whitelist-based registration (only approved emails can register)
+- Dashboard to view all job applications
+- Search and filter applications by status
+- Accept, decline, or mark applications as reviewing
+- Download applicant resumes
+- Automatic user account creation when accepting applications
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Requirements
 
-## Learning Laravel
+- PHP 8.2+
+- Laravel 10+
+- MySQL/SQLite database
+- Gmail account for email notifications (or configure your SMTP)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Clone and install dependencies:**
+   ```bash
+   composer install
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Configure environment:**
+   ```bash
+   cp .env.example .env
+   ```
 
-## Laravel Sponsors
+3. **Set up your `.env` file:**
+   ```
+   DB_DATABASE=akawnt
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   
+   MAIL_MAILER=smtp
+   MAIL_HOST=smtp.gmail.com
+   MAIL_PORT=587
+   MAIL_USERNAME=your-email@gmail.com
+   MAIL_PASSWORD=your-app-password
+   MAIL_FROM_ADDRESS=your-email@gmail.com
+   MAIL_FROM_NAME=Akawnt
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+4. **Generate keys and run migrations:**
+   ```bash
+   php artisan key:generate
+   php artisan migrate
+   ```
 
-### Premium Partners
+5. **Create storage symlink:**
+   ```bash
+   php artisan storage:link
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Routes
 
-## Contributing
+### Public Routes
+| URL | Description |
+|-----|-------------|
+| `/home` | Homepage with job application form |
+| `/affiliates` | Affiliates page |
+| `/reports` | Reports page |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Authentication
+| URL | Description |
+|-----|-------------|
+| `/admin/login` | Admin login |
+| `/admin/register` | Admin registration (whitelist required) |
+| `/login` | Applicant login |
+| `/logout` | Logout (POST) |
 
-## Code of Conduct
+### Admin Dashboard (requires admin login)
+| URL | Description |
+|-----|-------------|
+| `/admin/dashboard` | View all applications with stats |
+| `/admin/applications/{id}` | View application details |
+| `/admin/applications/{id}/accept` | Accept application |
+| `/admin/applications/{id}/decline` | Decline application |
+| `/admin/applications/{id}/review` | Mark as reviewing |
+| `/admin/applications/{id}/resume` | Download resume |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Applicant Dashboard (requires applicant login)
+| URL | Description |
+|-----|-------------|
+| `/dashboard` | View profile and application status |
 
-## Security Vulnerabilities
+## Whitelisted Admin Emails
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+By default, only these emails can register as admins:
+- `lui@akawnt.com`
+- `admin@akawnt.com`
+
+To add more, insert into `admin_whitelists` table or seed it.
+
+## User Roles
+
+| Role | Description |
+|------|-------------|
+| `admin` | Administrators who manage applications |
+| `accountant` | Accepted job applicants |
+
+## Application Status Flow
+
+```
+pending → reviewing → accepted/declined (terminal)
+```
+
+## Testing the Workflow
+
+1. **Register an admin:**
+   - Go to `/admin/register`
+   - Use a whitelisted email (e.g., `admin@akawnt.com`)
+   - Complete registration
+
+2. **Submit a job application:**
+   - Go to `/home`
+   - Fill out the application form
+   - Upload a resume (PDF, DOC, DOCX - max 5MB)
+
+3. **Accept the application:**
+   - Login as admin at `/admin/login`
+   - Go to `/admin/dashboard`
+   - Find the application, click "Accept"
+   - An email will be sent with login credentials
+
+4. **Applicant login:**
+   - Check the email for temporary password
+   - Go to `/login`
+   - Use email and temporary password
+   - Access `/dashboard` to view status
+
+## Storage
+
+Resumes are stored in `storage/app/private/` and are not publicly accessible. Only admins can download them through the application detail page.
+
+## Email Configuration
+
+For Gmail SMTP:
+1. Enable 2-Factor Authentication on your Google account
+2. Generate an App Password: Google Account → Security → App passwords
+3. Use the app password as `MAIL_PASSWORD` in `.env`
+
+## Project Structure
+
+```
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── AuthController.php
+│   │   │   ├── ApplicationController.php
+│   │   │   └── Admin|DashboardController.php
+│   │   └── Middleware/
+│   │       ├── AdminMiddleware.php
+│   │       └── ApplicantMiddleware.php
+│   ├── Mail/
+│   │   ├── ApplicationAccepted.php
+│   │   └── ApplicationDeclined.php
+│   └── Models/
+│       ├── JobApplication.php
+│       ├── AdminWhitelist.php
+│       └── User.php
+├── database/migrations/
+├── resources/views/
+│   ├── layouts/
+│   ├── auth/
+│   ├── admin/
+│   ├── applicant/
+│   ├── emails/
+│   └── partials/
+└── routes/web.php
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is proprietary software for Akawnt.

@@ -35,7 +35,12 @@
             font-size: 1rem;
             line-height: 1.65;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
+        main { flex: 1; }
  
         h1, h2, h3, h4, .display-font {
             font-family: 'DM Sans', sans-serif;
@@ -457,6 +462,7 @@
             color: rgba(255,255,255,0.55);
             padding: 2rem 0;
             font-size: 0.85rem;
+            margin-top: auto;
         }
         footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
         footer a:hover { color: var(--accent); }

@@ -1,17 +1,6 @@
 <section id="contact">
 
-    <!--  THIS CAN BE CHANGED      
-        Right now, contact is basically useless and is a placeholder which should be
-        the apply area for Accountants
-        First: Lets make seeders for accountants and admin login. (Steven knows best)
-        After that we make the Admin page after they successfully log in
-        This section is temporary but everything else on this main page can stay (Unless we want to change the navbar)
-    -->
-
-
-
-
-
+    {{-- Form --}}
     <div class="container">
         <div class="row g-5">
             
@@ -51,39 +40,71 @@
             {{-- Form --}}
             <div class="col-lg-8">
                 <div class="contact-form-wrap">
-                    <form action="#" method="POST">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
+
+                    <form action="{{ route('apply.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">First Name</label>
-                                <input type="text" name="first_name" class="form-control" placeholder="Juan" required />
+                                <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" placeholder="Juan" value="{{ old('first_name') }}" required />
+                                @error('first_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Last Name</label>
-                                <input type="text" name="last_name" class="form-control" placeholder="Dela Cruz" required />
+                                <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" placeholder="Dela Cruz" value="{{ old('last_name') }}" required />
+                                @error('last_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" name="email" class="form-control" placeholder="juan@email.com" required />
+                                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="juan@email.com" value="{{ old('email') }}" required />
+                                @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Subject</label>
-                                <select name="subject" class="form-select">
-                                    <option value="" disabled selected>Select a topic</option>
-                                    <option>General Inquiry</option>
-                                    <option>Job Application</option>
-                                    <option>Partnership</option>
-                                    <option>Other</option>
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror" placeholder="+63 123 456 7890" value="{{ old('phone') }}" required />
+                                @error('phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Position Applying For</label>
+                                <select name="position" class="form-select @error('position') is-invalid @enderror" required>
+                                    <option value="" disabled selected>Select a position</option>
+                                    <option value="Certified Public Accountant (CPA)" @if(old('position') == 'Certified Public Accountant (CPA)') selected @endif>Certified Public Accountant (CPA)</option>
+                                    <option value="Tax Accountant" @if(old('position') == 'Tax Accountant') selected @endif>Tax Accountant</option>
+                                    <option value="Audit Associate" @if(old('position') == 'Audit Associate') selected @endif>Audit Associate</option>
+                                    <option value="Bookkeeper" @if(old('position') == 'Bookkeeper') selected @endif>Bookkeeper</option>
+                                    <option value="Payroll Specialist" @if(old('position') == 'Payroll Specialist') selected @endif>Payroll Specialist</option>
+                                    <option value="Financial Analyst" @if(old('position') == 'Financial Analyst') selected @endif>Financial Analyst</option>
+                                    <option value="Other" @if(old('position') == 'Other') selected @endif>Other</option>
                                 </select>
+                                @error('position')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Resume (PDF, DOC, DOCX)</label>
+                                <input type="file" name="resume" class="form-control @error('resume') is-invalid @enderror" accept=".pdf,.doc,.docx" required />
+                                <small class="text-muted">Max file size: 5 MB</small>
+                                @error('resume')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Message</label>
-                                <textarea name="message" class="form-control" rows="5"
-                                            placeholder="Tell us what's on your mind..." required></textarea>
+                                <label class="form-label">Message / Cover Letter</label>
+                                <textarea name="message" class="form-control @error('message') is-invalid @enderror" rows="5" placeholder="Tell us about yourself..." value="{{ old('message') }}" required></textarea>
+                                @error('message')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn-primary-custom w-100 text-center">
-                                    Send Message <i class="bi bi-send ms-2"></i>
+                                    Submit Application <i class="bi bi-send ms-2"></i>
                                 </button>
                             </div>
                         </div>
